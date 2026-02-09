@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  /* Enforce Apple System Font */
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* The "GlassiFy" Liquid Effect */
+  /* .glass-liquid {
+    @apply bg-white/5 backdrop-blur-2xl border border-white/10;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.01));
+  } */
+
+  .glass-panel {
+    background-color: rgb(0 0 0 / 0.4);
+    backdrop-filter: blur(24px);
+    border-width: 1px;
+    border-color: rgb(255 255 255 / 0.1);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  }
+
+  .glass-card {
+    background-color: rgb(255 255 255 / 0.05);
+    backdrop-filter: blur(12px);
+    border-width: 1px;
+    border-color: rgb(255 255 255 / 0.1);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+
+  .glass-card:hover {
+    background-color: rgb(255 255 255 / 0.1);
+    border-color: rgb(255 255 255 / 0.2);
+    box-shadow: 0 0 20px rgb(255 255 255 / 0.1);
+  }
+
+  .glass-btn {
+    background-color: rgb(255 255 255 / 0.1);
+    backdrop-filter: blur(8px);
+    border-width: 1px;
+    border-color: rgb(255 255 255 / 0.2);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+
+  .glass-btn:hover {
+    background-color: rgb(255 255 255 / 0.2);
+    transform: scale(1.05);
+  }
+
+  .glass-heavy {
+    background: rgba(15, 15, 15, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Aurora Animations */
+  .animate-spin-slow {
+    animation: spin 20s linear infinite;
+  }
+
+  .animate-spin-reverse-slow {
+    animation: spin 25s linear infinite reverse;
+  }
+
+  .animate-wave {
+    animation: wave 10s ease-in-out infinite alternate;
+  }
+
+  @keyframes wave {
+    0% {
+      transform: translateX(-10%) scaleX(2);
+    }
+
+    100% {
+      transform: translateX(10%) scaleX(2);
+    }
+  }
+
+  /* Breathing Glow Effect */
+  @keyframes aurora-breathe {
+
+    0%,
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+      filter: blur(25px);
+    }
+
+    50% {
+      opacity: 0.7;
+      transform: scale(1.08);
+      filter: blur(40px);
+    }
+  }
+
+  .animate-aurora-breathe {
+    animation: aurora-breathe 5s ease-in-out infinite;
+    /* Ensure it sits behind the content */
+    z-index: -1;
+  }
+}

@@ -1,0 +1,105 @@
+# Frontend-Backend Integration Guide
+
+This guide explains how to connect the **Next.js Frontend** to the **FastAPI Backend**.
+
+## 1. API Client Setup (Already Implemented)
+The file [lib/api.ts](file:///Users/vivekjitdas/Documents/PersonalProjects/Resilience/social_media/project_synapse/frontend./lib/api.ts) is your central gateway. It is configured with `axios` to:
+- Point to `http://localhost:8000/api/v1`
+- Automatically attach your JWT from `authStore` to every request.
+- Handle 401 Unauthorized errors by logging the user out.
+
+## 2. Connecting the Feed
+To replace the dummy data in [app/page.tsx](file:///Users/vivekjitdas/Documents/PersonalProjects/Resilience/social_media/project_synapse/frontend./app/page.tsx) with real data from the backend:
+
+### Step A: Define the Fetch Function
+Create a service function in [lib/api.ts](file:///Users/vivekjitdas/Documents/PersonalProjects/Resilience/social_media/project_synapse/frontend./lib/api.ts) or a new file `lib/services/feedService.ts`:
+```typescript
+import { api } from "@/lib/api";
+import { FeedItemData } from "@/components/feed/FeedItem";
+
+export const fetchFeed = async (realms?: string[]): Promise<FeedItemData[]> => {
+  // Pass query params if needed, e.g., ?realms=art,tech
+  const response = await api.get("/feed/mix"); 
+  return response.data;
+};
+```
+
+### Step B: Fetch in Component
+Use `useEffect` or a library like **TanStack Query (React Query)** (Recommended for caching/loading states).
+
+**Using standard useEffect:**
+```tsx
+// app/page.tsx
+"use client";
+import { useEffect, useState } from "react";
+import { fetchFeed } from "@/lib/services/feedService";
+
+export default function Home() {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    fetchFeed().then(data => setItems(data));
+  }, []);
+  
+  // ... render items
+}
+```
+
+## 3. Connecting Authentication
+To hook up the Login/Register flow:
+
+### Step A: Auth Service
+```typescript
+// lib/services/authService.ts
+import { api } from "@/lib/api";
+
+export const loginUser = async (credentials: any) => {
+  const { data } = await api.post("/login", credentials);
+  // data should contain { access_token, user_info }
+  return data;
+};
+```
+
+### Step B: Updating the Store
+In your Login Component:
+```tsx
+import { useAuthStore } from "@/store/authStore";
+import { loginUser } from "@/lib/services/authService";
+
+const handleLogin = async () => {
+  const data = await loginUser({ username, password });
+  useAuthStore.getState().login(data.access_token, data.user);
+};
+```
+
+## 4. Important: Backend CORS Configuration
+For your frontend (localhost:3000) to talk to the backend (localhost:8000), you **MUST** configure CORS in [backend/app/main.py](file:///Users/vivekjitdas/Documents/PersonalProjects/Resilience/social_media/project_synapse/backend/app/main.py):
+
+```python
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"], # Allow Frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+## 5. Environment Variables
+Ideally, do not hardcode the API URL.
+1. Create [.env.local](file:///Users/vivekjitdas/Documents/PersonalProjects/Resilience/social_media/project_synapse/frontend./.env.local) in `frontend.`:
+   ```bash
+   NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+   ```
+2. Update [lib/api.ts](file:///Users/vivekjitdas/Documents/PersonalProjects/Resilience/social_media/project_synapse/frontend./lib/api.ts):
+   ```typescript
+   const API_Base_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+   ```
+
+## Checklist before Testing
+- [ ] Backend is running (`uvicorn app.main:app --reload`)
+- [ ] Backend CORS is set to allow `localhost:3000`
+- [ ] Frontend is running (`npm run dev`)
+- [ ] Database (Neo4j) is up and connected
