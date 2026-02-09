@@ -66,10 +66,10 @@ export default function AuroraVideoPlayer({ videoUrl, timeline, onClose }: Video
 
     const togglePlay = () => {
         if (videoRef.current?.paused) {
-            videoRef.current.play();
+            videoRef.current?.play();
             setIsPlaying(true);
         } else {
-            videoRef.current.pause();
+            videoRef.current?.pause();
             setIsPlaying(false);
         }
     };
