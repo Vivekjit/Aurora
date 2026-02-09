@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  # ------------------------------------------------------------
+  # CACHE LAYER (Redis)
+  # Used for: 
+  # 1. Caching "Velocity Scores" (Read Speed)
+  # 2. Celery Task Queue (Background Video Processing)
+  # ------------------------------------------------------------
+  redis:
+    image: redis:7.2-alpine
+    container_name: synapse_cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  # NOTE: We removed the Neo4j service because you are connecting 
+  # to the AuraDB Cloud instance defined in app/core/database.py.
+
+volumes:
+  redis_data:
