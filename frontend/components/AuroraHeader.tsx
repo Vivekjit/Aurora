@@ -2,6 +2,8 @@
 import { User, Plus } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import Link from "next/link"; // Import Link for navigation
+import { useAuth } from "@/context/AuthContext";
+import GoogleLoginButton from "@/components/GoogleLoginButton";
 
 interface HeaderProps {
     onOpenDashboard: () => void;
@@ -16,6 +18,8 @@ export default function AuroraHeader({ onOpenDashboard }: HeaderProps) {
     const glassButton = theme === "neon-white"
         ? "bg-black/5 hover:bg-black/10 text-black border-black/10"
         : "bg-white/10 hover:bg-white/20 text-white border-white/10";
+
+    const { user } = useAuth();
 
     return (
         <header className={`fixed top-0 left-0 right-0 z-40 h-16 flex items-center justify-between px-6 pointer-events-none transition-colors duration-500 border-b ${borderColor} bg-gradient-to-b from-black/5 to-transparent backdrop-blur-sm`}>
@@ -45,19 +49,22 @@ export default function AuroraHeader({ onOpenDashboard }: HeaderProps) {
             </div>
 
             {/* RIGHT: PROFILE TRIGGER */}
-            <button
-                onClick={onOpenDashboard}
-                className="relative group transition-transform active:scale-95 pointer-events-auto"
-            >
-                <div className="absolute -inset-[2px] bg-gradient-to-tr from-cyan-500 to-purple-600 rounded-full blur-[3px] opacity-60 group-hover:opacity-100 transition-opacity" />
-                <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-white/20 bg-gray-900">
-                    <img
-                        src="http://localhost:8000/uploads/profiles/aurora_cover.png"
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-            </button>
+            <div onClick={onOpenDashboard} className="pointer-events-auto cursor-pointer">
+                {user ? (
+                    <div className="relative group transition-transform active:scale-95">
+                        <div className="absolute -inset-[2px] bg-gradient-to-tr from-cyan-500 to-purple-600 rounded-full blur-[3px] opacity-60 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-white/20 bg-gray-900">
+                            <img
+                                src={user.picture}
+                                alt="Profile"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    </div>
+                ) : (
+                    <GoogleLoginButton />
+                )}
+            </div>
         </header>
     );
 }
