@@ -18,18 +18,19 @@ export const metadata: Metadata = {
   description: "Creator OS",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // ✅ SAFETY CHECK: Fallback to prevent crash if .env is missing locally
-  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
+// ... existing imports
 
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} ${dancingScript.variable} antialiased`}>
-        {/* ✅ WRAPPER 1: Google Auth Provider */}
-        <GoogleOAuthProvider clientId={clientId}>
-          {/* ✅ WRAPPER 2: Your Theme Provider */}
+    <html lang="en" className="no-scrollbar"> 
+      <body className="font-sans antialiased no-scrollbar"> 
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
           <AuthProvider>
-            <ThemeProvider>
+            <ThemeProvider> 
               {children}
             </ThemeProvider>
           </AuthProvider>

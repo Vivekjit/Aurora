@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+/* --- MERCEDES FONT DEFINITION --- */
+@font-face {
+  font-family: 'MercedesManual';
+  src: url('/fonts/mercedes.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'MercedesManual';
+  src: url('/fonts/mercedes-bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* ------------------------------- */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ... leave the rest of the file exactly as it is ... */
+
 :root {
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
@@ -19,6 +42,19 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+ @layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+} 
 
   /* The "GlassiFy" Liquid Effect */
   /* .glass-liquid {
@@ -124,5 +160,31 @@ body {
     animation: aurora-breathe 5s ease-in-out infinite;
     /* Ensure it sits behind the content */
     z-index: -1;
+  }
+}
+
+
+/* At the bottom of globals.css */
+
+/* Target the root elements to ensure the main browser scrollbar vanishes */
+html, body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+/* Add the utility back just in case you use it for specific divs */
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
